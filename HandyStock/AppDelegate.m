@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "MainViewController.h"
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -30,7 +30,7 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:UIColorFromRGB(0x2CC1ED), NSFontAttributeName:[UIFont fontWithName:@"Futura-CondensedExtraBold" size:28.0]}];
     [[UIBarButtonItem appearance] setTintColor:UIColorFromRGB(0x2CC1ED)];
 
-    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:[[ViewController alloc] init]];
+    UINavigationController *navigation = [[UINavigationController alloc]initWithRootViewController:[[MainViewController alloc] init]];
     
     self.window.rootViewController = navigation;
     [self.window makeKeyAndVisible];

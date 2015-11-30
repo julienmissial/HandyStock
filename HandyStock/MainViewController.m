@@ -6,14 +6,14 @@
 //  Copyright © 2015 Julien Missial. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "MainViewController.h"
 #import "StockTableViewController.h"
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define SCREEN_HEIGHT self.view.frame.size.height
 #define SCREEN_WIDTH self.view.frame.size.width
 #define ARC4RANDOM_MAX      0x100000000
 
-@interface ViewController (){
+@interface MainViewController (){
     float stock_price;
     UIButton * view, * buy;
     UILabel * stockPrice, * name;
@@ -22,12 +22,18 @@
 
 @end
 
-@implementation ViewController
+@implementation MainViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    //build interface
+    [self buildInterface];
+    
+}
 
+-(void) buildInterface{
     //setting up navigation controller
     self.title = @"HNDY";
     self.navigationController.navigationBar.topItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -84,10 +90,8 @@
     [self.view addSubview:buy];
     [self.view addSubview:stockPrice];
     [self.view addSubview:name];
-    
-    
-}
 
+}
 // Fcn to update price.
 -(void)updatePrice{
 
