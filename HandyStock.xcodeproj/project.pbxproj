@@ -15,8 +15,8 @@
 		842C72FD1C08D8BF008C88A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 842C72FB1C08D8BF008C88A6 /* LaunchScreen.storyboard */; };
 		842C73081C08D8BF008C88A6 /* HandyStockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 842C73071C08D8BF008C88A6 /* HandyStockTests.m */; };
 		842C73131C08D8BF008C88A6 /* HandyStockUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 842C73121C08D8BF008C88A6 /* HandyStockUITests.m */; };
-		842C73221C08F004008C88A6 /* StockTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 842C73211C08F004008C88A6 /* StockTableViewController.m */; settings = {ASSET_TAGS = (); }; };
-		842C73251C0933E5008C88A6 /* CustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 842C73241C0933E5008C88A6 /* CustomCell.m */; settings = {ASSET_TAGS = (); }; };
+		842C73221C08F004008C88A6 /* StockTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 842C73211C08F004008C88A6 /* StockTableViewController.m */; };
+		842C73251C0933E5008C88A6 /* CustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 842C73241C0933E5008C88A6 /* CustomCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

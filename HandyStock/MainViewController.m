@@ -14,7 +14,6 @@
 #define ARC4RANDOM_MAX      0x100000000
 
 @interface MainViewController (){
-    float stock_price;
     UIButton * view, * buy;
     UILabel * stockPrice, * name;
     NSMutableArray * stockPrices;
@@ -39,6 +38,16 @@
     self.navigationController.navigationBar.topItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     self.view.backgroundColor = UIColorFromRGB(0x252525);
     [self.navigationController.navigationBar setTintColor:UIColorFromRGB(0x2CC1ED)];
+    
+    // timer calls to update price.
+    [NSTimer scheduledTimerWithTimeInterval:60.0 target:self
+                                   selector:@selector(updatePrice) userInfo:nil repeats:YES];
+    
+    // configure nsurlsession
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    _session = [NSURLSession sessionWithConfiguration:config
+                                             delegate:nil
+                                        delegateQueue:nil];
     
     // initializing
     stockPrices = [[NSMutableArray alloc]init];
@@ -65,15 +74,6 @@
     buy.clipsToBounds = YES;
     [buy addTarget:self action:@selector(buyButton) forControlEvents:UIControlEventTouchUpInside];
     
-    // stock price button
-    stock_price = ((float)arc4random() / ARC4RANDOM_MAX) * 20 + 680.00;
-    stockPrice.textColor = UIColorFromRGB(0xFFFFFF);
-    [stockPrice setFont:[UIFont fontWithName:@"Futura-CondensedExtraBold" size:84.0]];
-    stockPrice.text = [NSString stringWithFormat:@"$%.2f", stock_price];
-    [stockPrice sizeToFit];
-    stockPrice.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 96);
-    [stockPrices addObject:[NSString stringWithFormat:@"%@",stockPrice.text]];
-    
     // Handy, Inc.
     name.text = @"Handy, Inc.";
     name.textColor = UIColorFromRGB(0xFFFFFF);
@@ -81,29 +81,61 @@
     [name sizeToFit];
     name.center = CGPointMake(SCREEN_WIDTH/2, 40);
     
-    // timer calls to update price.
-    [NSTimer scheduledTimerWithTimeInterval:20.0 target:self
-                                   selector:@selector(updatePrice) userInfo:nil repeats:YES];
-    
+    //Stock Price label
+    stockPrice.translatesAutoresizingMaskIntoConstraints= NO;
+    stockPrice.textColor = UIColorFromRGB(0xFFFFFF);
+    [stockPrice setFont:[UIFont fontWithName:@"Futura-CondensedExtraBold" size:84.0]];
+
     // add everything to view
     [self.view addSubview:view];
     [self.view addSubview:buy];
     [self.view addSubview:stockPrice];
     [self.view addSubview:name];
+    
+    //constraints for stockprice label
+    [self.view addConstraint: [NSLayoutConstraint
+                               constraintWithItem:stockPrice attribute:NSLayoutAttributeCenterX
+                               relatedBy:NSLayoutRelationEqual toItem:self.view attribute:
+                               NSLayoutAttributeCenterX multiplier:1.0 constant:0.0f]];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:stockPrice
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop    
+                                                         multiplier:1.0     
+                                                           constant:100.0]];
+    
+    [self updatePrice]; 
+}
 
+// fcn for the external api call
+-(NSString *)getPriceFromAPI{
+    
+    //the link to pull the latest price
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://dev.markitondemand.com/MODApis/Api/v2/Quote/jsonp?symbol=GOOG&callback=myFunction"]];
+
+    // parse the response string
+    NSString *json = [[NSString alloc] initWithData:data
+                                           encoding:NSUTF8StringEncoding];
+    json = [json stringByReplacingOccurrencesOfString:@"myFunction(" withString:@""];
+    json = [json stringByReplacingOccurrencesOfString:@")" withString:@""];
+    
+    //convert to array
+    NSArray *jsonObject = [NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+    
+    // pulling the last price only, assuming it updates during mkt hours
+    NSString *str = [jsonObject valueForKey:@"LastPrice"];
+    
+    return str;
 }
 // Fcn to update price.
 -(void)updatePrice{
 
-    stock_price = ((float)arc4random() / ARC4RANDOM_MAX) * 20 + 680.00;
-    stockPrice.textColor = UIColorFromRGB(0xFFFFFF);
-    [stockPrice setFont:[UIFont fontWithName:@"Futura-CondensedExtraBold" size:84.0]];
-    stockPrice.text = [NSString stringWithFormat:@"$%.2f", stock_price];
-    [stockPrice sizeToFit];
-    stockPrice.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 96);
-    
-    // add new price to array
+    stockPrice.text = [NSString stringWithFormat:@"$%.2f", [[self getPriceFromAPI] floatValue]];
     [stockPrices addObject:[NSString stringWithFormat:@"%@",stockPrice.text]];
+    
+    NSLog(@"Price Updated\n");
 }
 
 // buy button
